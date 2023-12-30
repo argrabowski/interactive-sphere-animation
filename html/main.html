@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <script id="vertex-shader" type="x-shader/x-vertex">
+    precision mediump float;
+    attribute vec4 vPosition;
+    attribute vec4 vNormal;
+    uniform vec4 lightPosition;
+    uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+    uniform float lightType;
+    uniform float wireframe;
+    uniform float shininess;
+    uniform mat4 modelViewMatrix;
+    uniform mat4 projectionMatrix;
+    varying vec3 L, N, V;
+    varying vec4 fColorVert;
+
+    void main()
+    {
+        vec3 pos = (modelViewMatrix * vPosition).xyz;
+        L = normalize(lightPosition.xyz - pos);
+        N = normalize(modelViewMatrix * vNormal).xyz;
+        V = normalize(-pos);
+
+        if (wireframe > 0.5) {
+          fColorVert = vec4(1.0, 1.0, 1.0, 1.0);
+        } else if (lightType < 0.5) {
+          vec3 V = normalize(-pos);
+          vec3 R = (2.0 * dot(L, N) * N) - L;
+          vec4 diffuse = diffuseProduct * dot(L, N);
+          vec4 ambient = ambientProduct;
+          vec4 specular = specularProduct * pow(max(dot(V, R), 0.0), shininess);
+
+          fColorVert = diffuse + specular + ambient;
+          fColorVert.a = 1.0;
+        }
+
+        gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+    }
+  </script>
+
+  <script id="fragment-shader" type="x-shader/x-fragment">
+    precision mediump float;
+    uniform float lightType;
+    uniform float wireframe;
+    uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+    uniform float shininess;
+    varying vec3 L, N, V;
+    varying vec4 fColorVert;
+
+    void main()
+    {
+      if (lightType > 0.5 && wireframe < 0.5) {
+        vec3 R = (2.0 * dot(L, N) * N) - L;
+        vec4 diffuse = diffuseProduct * dot(L, N);
+        vec4 ambient = ambientProduct;
+        vec4 specular = specularProduct * pow(max(dot(V, R), 0.0), shininess);
+
+        vec4 fColorFrag = diffuse + specular + ambient;
+        fColorFrag.a = 1.0;
+
+        gl_FragColor = fColorFrag;
+      } else {
+        gl_FragColor = fColorVert;
+      }
+    }
+  </script>
+
+  <script type="text/javascript" src="../lib/webgl-utils.js"></script>
+  <script type="text/javascript" src="../lib/initShaders.js"></script>
+  <script type="text/javascript" src="../lib/MV.js"></script>
+  <script type="text/javascript" src="../js/main.js"></script>
+
+  <title>CS 3741 Project 2</title>
+  <h1>CS 3741 Project 2</h1>
+  <body onload="main()">
+    <canvas id="gl-canvas" width="512" height="512"> Epic fail! </canvas>
+  </body>
+</html>
