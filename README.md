@@ -21,9 +21,6 @@ This project utilizes WebGL to render an interactive 3D scene featuring a wirefr
 - **HTML File (`index.html`):**
   - HTML structure for embedding the WebGL canvas and loading necessary scripts.
 
-- **Shader Files (`vertex-shader` and `fragment-shader`):**
-  - Vertex and fragment shaders for handling lighting calculations and color assignments.
-
 - **WebGL Utility Scripts (`webgl-utils.js`, `initShaders.js`, `MV.js`):**
   - Utility scripts for setting up the WebGL context and initializing shaders.
 
