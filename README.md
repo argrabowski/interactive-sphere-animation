@@ -1,5 +1,7 @@
 # Interactive Sphere Animation
 
+https://interactive-sphere-animation.glitch.me
+
 ## Overview
 
 This project utilizes WebGL to render an interactive 3D scene featuring a wireframe sphere and a line strip generated using the Chaikin algorithm. Users can interact with the scene through keypress events to control wireframe rendering, sphere subdivision, light type, line subdivision, and animation.
